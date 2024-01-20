@@ -3,24 +3,35 @@ from models import Author, Quotes #, Tag
 import json
 import connect
 
-with open("authors.json", "r") as a:
-    authors = json.load(a)
-for author in authors:
-    # born_date to datetime conversion needed ?
-    # text_date = author['born_date']
-    # author['born_date'] = str(datetime.strptime(text_date, "%B %d, %Y").date())
-    Author.from_json(json.dumps(author)).save()
+def read_json(file):
+    with open(file, "r", encoding='utf-8') as f:
+        return json.load(f)
+    
+def main():
+    authors = read_json("authors.json")
+    quotes = read_json("quotes.json")
 
-with open("quotes.json", "r") as q:
-    quotes = json.load(q)
-for quote in quotes:
-    # assuming author records are unique
-    authors = Author.objects(fullname=quote['author'])
-    quote['author'] = str(authors[0].id)
+    for author in authors:
+        # born_date to datetime conversion needed ?
+        # text_date = author['born_date']
+        # author['born_date'] = str(datetime.strptime(text_date, "%B %d, %Y").date())
+        # Author.from_json(json.dumps(author)).save()
+        Author(**author).save()
 
-    # tags from flat list to list[Tag] needed ?
-    # not working
-    # quote['tags'].clear()
-    # quote['tags'] = [tag.name for tag in tags]
+    for quote in quotes:
+        # assuming author records are unique
+        # authors = Author.objects(fullname=quote['author'])
+        # quote['author'] = str(authors[0].id)
+        author_name = Author.objects(fullname=quote['author']).first()
+        quote['author'] = author_name
 
-    Quotes.from_json(json.dumps(quote)).save()
+        # tags from flat list to list[Tag] needed ?
+        # not working
+        # quote['tags'].clear()
+        # quote['tags'] = [tag.name for tag in tags]
+
+        # Quotes.from_json(json.dumps(quote)).save()
+        Quotes(**quote).save()
+
+if __name__ == "__main__":
+    main()
