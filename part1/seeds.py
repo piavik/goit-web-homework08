@@ -1,13 +1,16 @@
 from models import Author, Quotes #, Tag
 # from datetime import datetime
 import json
-import connect
+import connect_mongo
 
 def read_json(file):
     with open(file, "r", encoding='utf-8') as f:
         return json.load(f)
     
 def main():
+    Author.drop_collection()
+    Quotes.drop_collection()
+
     authors = read_json("authors.json")
     quotes = read_json("quotes.json")
 
@@ -35,3 +38,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    connect_mongo.connect

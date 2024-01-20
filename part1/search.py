@@ -1,6 +1,13 @@
 from models import Author, Quotes 
-import connect
+import connect_mongo, connect_redis
+# from redis_lru import RedisLRU
 
+# redis_client = redis.StrictRedis(host="localhost", port=6369, password=None)
+
+# cache = RedisLRU(connect.redis_client)
+
+@connect_redis.cache
+# @cache
 def quotes_by_author(name: str) -> list:
     quotes = []
     try:
@@ -13,28 +20,21 @@ def quotes_by_author(name: str) -> list:
         quotes.append(record.quote)
     return quotes
 
+@connect_redis.cache
+# @cache
 def quotes_by_tags(tags_string: str) -> list:
     quotes = []
     tag_list = tags_string.split(',')
     for tag in tag_list:
         for rec in Quotes.objects(tags__istartswith=tag):
-            # istartswith does not work 
+            # istartswith does not work as tags is a list
             quotes.append(rec.quote)
     return quotes
 
-# def search_quotes(name: None, tags: None):
-#     quotes = []
-#     if name:
-#         authors = Author.objects(fullname=name)
-#         records = Quotes.objects(author=authors[0].id)
-#     elif tags:
-#         tag_list = tags_string.split(',')
-#         records = Quotes.objects(tags__in=tag_list)
-#     else:
-#         return "Not Found"
-#     for record in records:
-#         quotes.append(record.quote)
-#     return quotes
+def output(result):
+    if result == [] or result == "":
+        result = "Not found, sorry"
+    print(result)
 
 def main_loop():
     while True:
@@ -50,19 +50,13 @@ def main_loop():
 
         # result = []
         if k == "name":
-            # list of quotes by author name
             result = quotes_by_author(v.strip())
         elif k in ["tags", "tag"]:
-            # list of quotes by tag or tags
             result = quotes_by_tags(v.strip())
         else:
-            result = "Incorrect command, try again."
+            result = "Incorrect command, please try again."     
 
-        # result = search_quotes(k, v)
-        if result == []:
-            result = "Not found, sorry"
-        print(result)
-
+        output(result)
 
 
 if __name__ == "__main__":
