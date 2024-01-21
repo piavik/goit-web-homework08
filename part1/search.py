@@ -1,13 +1,12 @@
 from models import Author, Quotes 
-import connect_mongo, connect_redis
+import connect_mongo, connect_redis as redis
 # from redis_lru import RedisLRU
 
 # redis_client = redis.StrictRedis(host="localhost", port=6369, password=None)
 
 # cache = RedisLRU(connect.redis_client)
 
-@connect_redis.cache
-# @cache
+@redis.cache
 def quotes_by_author(name: str) -> list:
     quotes = []
     try:
@@ -20,8 +19,7 @@ def quotes_by_author(name: str) -> list:
         quotes.append(record.quote)
     return quotes
 
-@connect_redis.cache
-# @cache
+@redis.cache
 def quotes_by_tags(tags_string: str) -> list:
     quotes = []
     tag_list = tags_string.split(',')
