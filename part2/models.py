@@ -15,4 +15,5 @@ class Contact(Document):
     email = StringField(required=True)
     sent = BooleanField(default=False)
     tags = ListField(EmbeddedDocumentField(Tag))
+    pref_method = StringField()
 
