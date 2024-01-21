@@ -1,3 +1,4 @@
+import sys
 from models import Contact
 import connect_mongo
 import connect_rmq as rmq
@@ -8,6 +9,8 @@ queue_name = "sms"
 def callback(ch, method, properties, body):
     user_id = body.decode()
     print(f'Message sent to user_id {user_id}')
+    db_contact = Contact.objects(id=user_id) 
+    db_contact.update(sent=True)
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 

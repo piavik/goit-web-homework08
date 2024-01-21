@@ -9,8 +9,9 @@ class Phone(EmbeddedDocument):
     number = StringField()
 
 class Contact(Document):
-    fullname = StringField(required=True)
-    phone = ListField(EmbeddedDocumentField(Tag))
+    name = StringField(required=True)
+    address = StringField()
+    phones = ListField(EmbeddedDocumentField(Phone))
     email = StringField(required=True)
     sent = BooleanField(default=False)
     tags = ListField(EmbeddedDocumentField(Tag))

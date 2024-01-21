@@ -1,11 +1,6 @@
 from models import Author, Quotes 
 import connect_mongo
 import connect_redis as redis
-# from redis_lru import RedisLRU
-
-# redis_client = redis.StrictRedis(host="localhost", port=6369, password=None)
-
-# cache = RedisLRU(connect.redis_client)
 
 @redis.cache
 def quotes_by_author(name: str) -> list:
@@ -39,12 +34,12 @@ def main_loop():
     while True:
         entered = input("What? ")
         if entered in ['exit', 'q', 'bye']:
-            print("Bye!")
+            output("Bye!")
             break
         try:
             k, v = entered.split(':')
         except ValueError:
-            print("What do you mean?")
+            output("What do you mean?")
             continue
 
         # result = []
