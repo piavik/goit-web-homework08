@@ -1,7 +1,7 @@
 # from datetime import datetime
 
-from mongoengine import EmbeddedDocument, Document
-from mongoengine.fields import ListField, StringField, ReferenceField#, EmbeddedDocumentField, DateTimeField
+from mongoengine import Document #, EmbeddedDocument
+from mongoengine.fields import ListField, StringField, ReferenceField #, EmbeddedDocumentField, DateTimeField
 
 
 # class Tag(EmbeddedDocument):

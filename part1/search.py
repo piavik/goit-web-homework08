@@ -1,5 +1,6 @@
 from models import Author, Quotes 
-import connect_mongo, connect_redis as redis
+import connect_mongo
+import connect_redis as redis
 # from redis_lru import RedisLRU
 
 # redis_client = redis.StrictRedis(host="localhost", port=6369, password=None)
